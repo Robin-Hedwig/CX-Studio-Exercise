@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { CxExerciseStack } from '../lib/cx-exercise-stack';
+import { CxCdkExerciseStack } from '../lib/cx-cdk-exercise-stack';
 
 const app = new cdk.App();
-new CxExerciseStack(app, 'CxExerciseStack', {
+new CxCdkExerciseStack(app, 'CxCdkExerciseStack', {
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,
    * but a single synthesized template can be deployed anywhere. */
