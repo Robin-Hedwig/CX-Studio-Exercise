@@ -52,7 +52,7 @@ export class CxCdkExerciseStack extends cdk.Stack {
   const api = new apigateway.RestApi(this, 'Api', {
     restApiName: 'File Upload Service',
     description: 'This service uploads files to an S3 bucket.',
-    binaryMediaTypes: ['image/png', 'application/pdf'],
+    binaryMediaTypes: ['multipart/form-data'],
 });
 
 
