@@ -56,7 +56,7 @@ export class CxCdkExerciseStack extends cdk.Stack {
 });
 
 
-  //Created a resource and method for the API Gateway
+  //Created a resource and method for the API Gateway to upload resume and other user data
   const upload = api.root.addResource('upload');
   const postMethod = upload.addMethod('POST', new apigateway.LambdaIntegration(handler));
 
@@ -65,7 +65,7 @@ export class CxCdkExerciseStack extends cdk.Stack {
     value: api.url,
   });
 
-  //Created a Lambda function to process the uploaded file
+  //Created a Lambda function to process the uploaded resume
   const processFileHandler = new lambda.Function(this, 'ProcessFileHandler', {
     runtime: lambda.Runtime.NODEJS_14_X,
     code: lambda.Code.fromAsset('lambda'),
@@ -93,12 +93,27 @@ export class CxCdkExerciseStack extends cdk.Stack {
   //Granted the Lambda function read/write permissions to the DynamoDB table
   table.grantReadWriteData(processFileHandler);
 
-  //Added an event notification to the S3 bucket
+  //Added an event notification to the S3 bucket to trigger next lambda once resume is uploaded
   bucket.addEventNotification(
     s3.EventType.OBJECT_CREATED,
     new s3notifications.LambdaDestination(processFileHandler)
 );
+
+  //created a lambda function to get number of applicants for the job
+  const getCountHandler=new lambda.Function(this,'GetCountHandler',{
+    runtime: lambda.Runtime.NODEJS_14_X,
+    code: lambda.Code.fromAsset('lambda'),
+    handler: 'get-count.handler',
+    environment:{
+      TABLE_NAME: table.tableName,
+    },
+  });
+
+  table.grantReadData(getCountHandler);
   
+  //Created a resource to get the number of applicants applied for the job
+  const getCount=api.root.addResource('get-count');
+  const getCountMethod=getCount.addMethod('GET', new apigateway.LambdaIntegration(getCountHandler));
 
 }
 }
