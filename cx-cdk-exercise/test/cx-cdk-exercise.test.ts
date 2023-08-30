@@ -43,3 +43,51 @@ test('S3 Bucket Created With Versioning', () => {
     assert.resourceCountIs('AWS::ApiGateway::RestApi', 1);
   });
   
+  test('DynamoDB Table Created', () => {
+    const app = new cdk.App();
+    const stack = new CxCdkExercise.CxCdkExerciseStack(app, 'MyTestStack');
+  
+    const assert = Template.fromStack(stack);
+    assert.resourceCountIs('AWS::DynamoDB::Table', 1);
+    assert.hasResourceProperties('AWS::DynamoDB::Table', {
+      AttributeDefinitions: [
+        {
+          AttributeName: 'email',
+          AttributeType: 'S',
+        },
+      ],
+      KeySchema: [
+        {
+          AttributeName: 'email',
+          KeyType: 'HASH',
+        },
+      ],
+      BillingMode: 'PAY_PER_REQUEST',
+    });
+  });
+  
+  test('Lambda Functions Created', () => {
+    const app = new cdk.App();
+    const stack = new CxCdkExercise.CxCdkExerciseStack(app, 'MyTestStack');
+  
+    const assert = Template.fromStack(stack);
+    assert.resourceCountIs('AWS::Lambda::Function', 3);
+    assert.hasResourceProperties('AWS::Lambda::Function', {
+      Runtime: 'nodejs14.x',
+      Handler: 'file-upload.handler',
+      Environment: {
+        Variables: {
+          BUCKET_NAME: {
+            Ref: 'Bucket83908E77',
+          },
+          TABLE_NAME: {
+            Ref: 'TableCD117FA1',
+          },
+        },
+      },
+    });
+  });
+
+  
+  
+  
