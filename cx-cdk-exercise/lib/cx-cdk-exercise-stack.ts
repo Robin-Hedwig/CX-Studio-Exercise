@@ -12,13 +12,13 @@ export class CxCdkExerciseStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-   //Created an S3 bucket -> server-side encryption enabled and versioning enabled
+   //S3 bucket to store resume of applicants -> server-side encryption enabled and versioning enabled
    const bucket = new s3.Bucket(this, 'Bucket', {
     versioned: true,
     encryption: s3.BucketEncryption.S3_MANAGED,
   });
 
-  //Created a Lambda function
+  //lambda function to upload the resume to the S3
   const handler = new lambda.Function(this, 'Handler', {
     runtime: lambda.Runtime.NODEJS_14_X,
     code: lambda.Code.fromAsset('lambda'),
@@ -65,7 +65,7 @@ export class CxCdkExerciseStack extends cdk.Stack {
     value: api.url,
   });
 
-  //Created a Lambda function to process the uploaded resume
+  //this Lambda function is to process the uploaded resume
   const processFileHandler = new lambda.Function(this, 'ProcessFileHandler', {
     runtime: lambda.Runtime.NODEJS_14_X,
     code: lambda.Code.fromAsset('lambda'),
@@ -93,13 +93,13 @@ export class CxCdkExerciseStack extends cdk.Stack {
   //Granted the Lambda function read/write permissions to the DynamoDB table
   table.grantReadWriteData(processFileHandler);
 
-  //Added an event notification to the S3 bucket to trigger next lambda once resume is uploaded
+  //an event notification to the S3 bucket to trigger next lambda once resume is uploaded
   bucket.addEventNotification(
     s3.EventType.OBJECT_CREATED,
     new s3notifications.LambdaDestination(processFileHandler)
 );
 
-  //created a lambda function to get number of applicants for the job
+  //a lambda function to get number of applicants for the job
   const getCountHandler=new lambda.Function(this,'GetCountHandler',{
     runtime: lambda.Runtime.NODEJS_14_X,
     code: lambda.Code.fromAsset('lambda'),
@@ -111,9 +111,25 @@ export class CxCdkExerciseStack extends cdk.Stack {
 
   table.grantReadData(getCountHandler);
   
-  //Created a resource to get the number of applicants applied for the job
+  //a resource to get the number of applicants applied for the job
   const getCount=api.root.addResource('get-count');
   const getCountMethod=getCount.addMethod('GET', new apigateway.LambdaIntegration(getCountHandler));
+
+  //this lambda is to return details of applicant, this lambda is for admin page to see and validate candidates
+  const getAllApplicantsHandler =new lambda.Function(this,'getAllApplicantsHandler',{
+    runtime: lambda.Runtime.NODEJS_14_X,
+    code: lambda.Code.fromAsset('lambda'),
+    handler: 'get-all-applicants.handler',
+    environment: {
+      TABLE_NAME:table.tableName,
+    },
+  });
+
+  table.grantReadData(getAllApplicantsHandler);
+
+  //this resourse is to get details of all the applicants for the job
+  const getAllApplicants=api.root.addResource('get-all-applicants');
+  const getAllMethod=getAllApplicants.addMethod('GET', new apigateway.LambdaIntegration(getAllApplicantsHandler));
 
 }
 }
