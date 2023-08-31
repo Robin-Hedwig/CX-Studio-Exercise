@@ -3,6 +3,7 @@ const AWS = require('aws-sdk');
 const textract = new AWS.Textract();
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
+//handler that uses AWS textract to process pdf, png, jpg files
 exports.handler = async (event) => {
     try {
         console.log("Received event: ", JSON.stringify(event, null, 2));
@@ -19,6 +20,7 @@ exports.handler = async (event) => {
             FeatureTypes: ["TABLES"], 
         };
 
+        //starting the job to process the files
         console.log("Starting document analysis...");
         const startJob = await textract.startDocumentAnalysis(params).promise();
         const jobId = startJob.JobId;
@@ -26,6 +28,7 @@ exports.handler = async (event) => {
 
         let jobStatus = 'IN_PROGRESS';
         let result;
+        //waiting for the job to complete- it has to either succeed or fail
         while (jobStatus === 'IN_PROGRESS') {
             console.log("Polling job status...");
             result = await textract.getDocumentAnalysis({ JobId: jobId }).promise();
@@ -36,6 +39,7 @@ exports.handler = async (event) => {
             }
         }
 
+        //once it succeeds, dynamodb table is updated with same key(email id)
         if (jobStatus === 'SUCCEEDED') {
             console.log("Job completed. Extracting data...");
             const text = result.Blocks.filter(block => block.BlockType === 'LINE').map(block => block.Text).join(' ');

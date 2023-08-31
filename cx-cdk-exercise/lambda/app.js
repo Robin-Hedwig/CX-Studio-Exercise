@@ -29,6 +29,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     },
   };
 
+  //updating dynamodb table with user details recieved along with the file as form data
   try {
     await dynamodb.put(dbParams).promise();
 
@@ -39,6 +40,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
       ContentType: req.file.mimetype,
     };
     
+    //uploading file to s3
     try {
       await s3.upload(params).promise();
 
@@ -49,6 +51,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
         Key: { email },
       };
 
+      //deleting the dynamodb entry if the upload failed
       await dynamodb.delete(deleteParams).promise();
 
       res.status(500).send('File upload failed, data rolled back from DynamoDB');

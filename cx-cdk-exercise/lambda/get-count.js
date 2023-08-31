@@ -9,6 +9,7 @@ exports.handler= async(event)=>{
                
     try{
         const data=await dynamodb.scan(params).promise();
+        //returning count to the UI, to display number of applicants applied for the job
         return{
             statusCode:200,
             body:JSON.stringify(data.Count),
