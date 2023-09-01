@@ -17,7 +17,7 @@ exports.handler = async (event) => {
                     Name: key,
                 },
             },
-            FeatureTypes: ["TABLES"], 
+            FeatureTypes: ["TABLES"],
         };
 
         //starting the job to process the files

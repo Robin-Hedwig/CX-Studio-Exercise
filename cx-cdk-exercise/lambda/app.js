@@ -39,7 +39,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
       Body: req.file.buffer,
       ContentType: req.file.mimetype,
     };
-    
+
     //uploading file to s3
     try {
       await s3.upload(params).promise();

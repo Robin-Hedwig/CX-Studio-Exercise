@@ -4,6 +4,5 @@ const server = awsServerlessExpress.createServer(app);
 
 //file upload handler
 exports.handler = (event, context) => {
-    awsServerlessExpress.proxy(server, event, context);
-  };
-  
+  awsServerlessExpress.proxy(server, event, context);
+};

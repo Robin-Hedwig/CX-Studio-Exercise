@@ -1,24 +1,24 @@
-const AWS =require('aws-sdk');
-const dynamodb=new AWS.DynamoDB.DocumentClient();
+const AWS = require('aws-sdk');
+const dynamodb = new AWS.DynamoDB.DocumentClient();
 
-exports.handler= async(event)=>{
+exports.handler = async (event) => {
     const params = {
         TableName: process.env.TABLE_NAME,
         Select: "COUNT"
     };
-               
-    try{
-        const data=await dynamodb.scan(params).promise();
+
+    try {
+        const data = await dynamodb.scan(params).promise();
         //returning count to the UI, to display number of applicants applied for the job
-        return{
-            statusCode:200,
-            body:JSON.stringify(data.Count),
+        return {
+            statusCode: 200,
+            body: JSON.stringify(data.Count),
         };
-    }catch(error){
+    } catch (error) {
         console.error(error);
-        return{
-            statusCode:500,
-            body:JSON.stringify('Error getting item Count'),
+        return {
+            statusCode: 500,
+            body: JSON.stringify('Error getting item Count'),
         };
     }
 };

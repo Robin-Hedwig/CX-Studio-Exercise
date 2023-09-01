@@ -1,4 +1,6 @@
-*.js
+cx-cdk-exercise-stack.js
+cx-cdk-exercise.js
+cx-cdk-exercise.test.js
 !jest.config.js
 *.d.ts
 node_modules
