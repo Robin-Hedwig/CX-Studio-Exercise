@@ -1,5 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
+import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
@@ -12,20 +13,27 @@ export class CxCdkExerciseStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    //S3 bucket to store resume of applicants -> server-side encryption enabled and versioning enabled
+    //vpc to make the lambda functions highly available across multiple az'z
+    const vpc = new ec2.Vpc(this, 'MyVpc', {
+      maxAzs: 3,
+      cidr: '10.0.0.0/16',
+    });
+
+    //S3 bucket to store resume of applicants-> server-side encryption enabled and versioning enabled
     const bucket = new s3.Bucket(this, 'Bucket', {
       versioned: true,
       encryption: s3.BucketEncryption.S3_MANAGED,
     });
 
     //lambda function to upload the resume to the S3
-    const handler = new lambda.Function(this, 'Handler', {
+    const fileUploadHandler = new lambda.Function(this, 'fileUploadHandler', {
       runtime: lambda.Runtime.NODEJS_14_X,
       code: lambda.Code.fromAsset('lambda'),
       handler: 'file-upload.handler',
       environment: {
         BUCKET_NAME: bucket.bucketName,
       },
+      vpc: vpc,
     });
 
     //Created a DynamoDB table
@@ -33,20 +41,20 @@ export class CxCdkExerciseStack extends cdk.Stack {
       partitionKey: { name: 'email', type: dynamodb.AttributeType.STRING },
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
       encryption: dynamodb.TableEncryption.AWS_MANAGED,
-      replicationRegions: ['us-west-2'],
+      replicationRegions: ['us-west-2', 'us-east-2'],
       removalPolicy: cdk.RemovalPolicy.DESTROY //i m using this to delete db once done, in a redundant application, it will not be there 
     });
 
 
 
     //Granted the Lambda function read/write permissions to the S3 bucket
-    bucket.grantReadWrite(handler);
+    bucket.grantReadWrite(fileUploadHandler);
 
     //Granted the Lambda function read/write permissions to the DynamoDB table
-    table.grantReadWriteData(handler);
+    table.grantReadWriteData(fileUploadHandler);
 
     //Passed the table name to the Lambda function
-    handler.addEnvironment('TABLE_NAME', table.tableName);
+    fileUploadHandler.addEnvironment('TABLE_NAME', table.tableName);
 
     //Created an API Gateway
     const api = new apigateway.RestApi(this, 'Api', {
@@ -58,12 +66,7 @@ export class CxCdkExerciseStack extends cdk.Stack {
 
     //Created a resource and method for the API Gateway to upload resume and other user data
     const upload = api.root.addResource('upload');
-    const postMethod = upload.addMethod('POST', new apigateway.LambdaIntegration(handler));
-
-    //the API Gateway URL
-    new cdk.CfnOutput(this, 'ApiUrl', {
-      value: api.url,
-    });
+    const postMethod = upload.addMethod('POST', new apigateway.LambdaIntegration(fileUploadHandler));
 
     //this Lambda function is to process the uploaded resume
     const processFileHandler = new lambda.Function(this, 'ProcessFileHandler', {
@@ -73,6 +76,7 @@ export class CxCdkExerciseStack extends cdk.Stack {
       environment: {
         TABLE_NAME: table.tableName,
       },
+      vpc: vpc,
       timeout: cdk.Duration.seconds(900),
       memorySize: 1024,
     });
@@ -107,6 +111,7 @@ export class CxCdkExerciseStack extends cdk.Stack {
       environment: {
         TABLE_NAME: table.tableName,
       },
+      vpc: vpc,
     });
 
     table.grantReadData(getCountHandler);
@@ -123,6 +128,7 @@ export class CxCdkExerciseStack extends cdk.Stack {
       environment: {
         TABLE_NAME: table.tableName,
       },
+      vpc: vpc,
     });
 
     table.grantReadData(getAllApplicantsHandler);
@@ -139,6 +145,7 @@ export class CxCdkExerciseStack extends cdk.Stack {
       environment: {
         TABLE_NAME: table.tableName,
       },
+      vpc: vpc,
     });
 
     //granted write permission to update the table
