@@ -155,5 +155,23 @@ export class CxCdkExerciseStack extends cdk.Stack {
     const updateStatus = api.root.addResource('update-status');
     const updateStatusMethod = updateStatus.addMethod('POST', new apigateway.LambdaIntegration(updateStatusHandler));
 
+    //resourse to find resume match percentage when admin sends keywords to match with resume
+    const matchPercentageHandler =new lambda.Function(this,'matchPercentageHandler',{
+      runtime:lambda.Runtime.NODEJS_14_X,
+      code:lambda.Code.fromAsset('lambda'),
+      handler:'match-percentage.handler',
+      environment:{
+        TABLE_NAME:table.tableName,
+      },
+      vpc:vpc,
+    });
+
+    //granting write permissiton to update match percentage to the table
+    table.grantReadWriteData(matchPercentageHandler);
+
+    //created an api gateway resourse to access the lambda
+    const matchPercent=api.root.addResource('match-percentage');
+    const matchPercentMethod=matchPercent.addMethod('POST', new apigateway.LambdaIntegration(matchPercentageHandler));
+
   }
 }

@@ -19,7 +19,7 @@ CX Studio technical exercise
 
 8)Created a new lambda function to update Status of applicants. (admin page) (1/09/23)
 
-9)added lambda functions to vpc to make it available for multiple AZ.(highly available and redundant) (02/09/2023)
+9)added lambda functions to vpc to make it available for multiple AZ (highly available and redundant). I have also created a new lambda function to find match percentage of each applicant for the job, admin will submit the keywords they are looking for in a candidate for a particular job role, and this lambda will find the match percentage of candidate matching the keywords with the resume stored in dynamo db table. (02/09/2023)
 
 # To run the application
 1)npm install (run this command inside main folder and navigate to lambda folder to do the same)
