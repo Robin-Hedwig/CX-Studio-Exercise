@@ -1,0 +1,213 @@
+{
+	"info": {
+		"_postman_id": "1a8f577f-ceca-4029-9c4d-64ed8987f035",
+		"name": "CX_Exercise",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9187200"
+	},
+	"item": [
+		{
+			"name": "upload",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "image/png",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/Robin Hedwig/Downloads/111111.png"
+						},
+						{
+							"key": "email",
+							"value": "robin97engineer@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Robin Hedwig Prabhakar",
+							"type": "text"
+						},
+						{
+							"key": "phoneNumber",
+							"value": "+447405292477",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "Male",
+							"type": "text"
+						},
+						{
+							"key": "disability",
+							"value": "No",
+							"type": "text"
+						},
+						{
+							"key": "visaStatus",
+							"value": "Student",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://vjw22g8sd5.execute-api.eu-west-2.amazonaws.com/prod/upload",
+					"protocol": "https",
+					"host": [
+						"vjw22g8sd5",
+						"execute-api",
+						"eu-west-2",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"prod",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get-count",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "image/png",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "https://vjw22g8sd5.execute-api.eu-west-2.amazonaws.com/prod/get-count",
+					"protocol": "https",
+					"host": [
+						"vjw22g8sd5",
+						"execute-api",
+						"eu-west-2",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"prod",
+						"get-count"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get-all-applicants",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "image/png",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "https://ic5r6yfg7g.execute-api.eu-west-2.amazonaws.com/prod/get-all-applicants",
+					"protocol": "https",
+					"host": [
+						"ic5r6yfg7g",
+						"execute-api",
+						"eu-west-2",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"prod",
+						"get-all-applicants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update-status",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"robinhedwig1997@gmail.com\",\r\n    \"status\":\"Shortlisted\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bcwjqx1t0c.execute-api.eu-west-2.amazonaws.com/prod/update-status",
+					"protocol": "https",
+					"host": [
+						"bcwjqx1t0c",
+						"execute-api",
+						"eu-west-2",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"prod",
+						"update-status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "match-percentage",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"keywords\":\"java,contribute,collaborate,lead,cloud,python,web,aws\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://u8205wmlxh.execute-api.eu-west-2.amazonaws.com/prod/match-percentage",
+					"protocol": "https",
+					"host": [
+						"u8205wmlxh",
+						"execute-api",
+						"eu-west-2",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"prod",
+						"match-percentage"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
