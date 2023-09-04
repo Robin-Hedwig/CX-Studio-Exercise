@@ -1,6 +1,7 @@
 import { Template } from 'aws-cdk-lib/assertions';
 import * as CxCdkExercise from '../lib/cx-cdk-exercise-stack';
 import * as cdk from 'aws-cdk-lib';
+import * as ec2 from 'aws-cdk-lib/aws-ec2';
 
 
 test('S3 Bucket Created With Encryption', () => {
@@ -87,6 +88,3 @@ test('Lambda Functions Created', () => {
     },
   });
 });
-
-
-

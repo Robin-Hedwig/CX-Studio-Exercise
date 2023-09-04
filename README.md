@@ -1,9 +1,11 @@
 # CX-Studio-Exercise
 CX Studio technical exercise
 
+# Project: Applicant Tracking System
+
 # Progress and Challenges 
 
-1)As the first step of learning, I practiced creating a sample CDK project as given in the CDK workshop. I learned to create L1, L2, and L3 constructs and lambda functions using the CDK project. (25/08/2023)
+1)As the first step of learning, I practiced creating a sample CDK project as given in the CDK workshop.  (25/08/2023)
 
 2)Worked on the idea and designed an overview of the system design of the application that I am going to develop using CDK. (26/08/2023)
 
@@ -21,12 +23,27 @@ CX Studio technical exercise
 
 9)added lambda functions to vpc to make it available for multiple AZ (highly available and redundant). I have also created a new lambda function to find match percentage of each applicant for the job, admin will submit the keywords they are looking for in a candidate for a particular job role, and this lambda will find the match percentage of candidate matching the keywords with the resume stored in dynamo db table. (02/09/2023)
 
-# To run the application
+# To run the application, run both Backend(cdk) and UI
+# CX-STUDIO-EXERCISE/cx-cdk-exercise
 1)npm install (run this command inside main folder, then navigate to lambda folder and do the same)
 2)npm run build
-3)cdk bootstrap
-4)cdk deploy
+3)npm run test
+4)cdk bootstrap
+5)cdk deploy
 
+after deploying backend
+# CX-STUDIO-EXERCISE/UI/cx-exercise-ui
 
-after deploying, you can use the UI created to access the services created (check endpoints before testing), Paste the api gateway url generated to 'base url' inside admin component ts file and also inside home component typescript file.
+1)Change the base URL in 2 files( copy and paste the apigateway endpoint from terminal after deploying backend)
+    a)home.component.ts
+    b)admin.component.ts
+2)npm install
+3)ng serve
+
+Open the web browser and paste following 2 urls in 2 different tabs(change port if run on diff port)
+1)http://localhost:4200/           ----->this to apply for Job
+2)http://localhost:4200/admin      ----->this is admin page
+
+# If you do not want to use UI for testing, Use POSTMAN to test the services, (POSTMAN collection attached)
+
 cdk destroy--> to destroy resources once completed
