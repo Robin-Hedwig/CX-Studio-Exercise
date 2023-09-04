@@ -52,3 +52,23 @@
     margin-bottom: 10px;
     width: 100%;
 }
+
+/* Add this CSS to your component's CSS file or global styles */
+
+.success-message {
+  background-color: #4CAF50; 
+  color: white; 
+  padding: 10px 20px; 
+  border-radius: 5px; 
+  position: fixed; 
+  top: 20px; 
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000; 
+  opacity: 0; 
+  transition: opacity 0.3s; 
+}
+
+.success-message.show {
+  opacity: 1; 
+}
