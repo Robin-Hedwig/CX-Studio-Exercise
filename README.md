@@ -23,7 +23,7 @@ CX Studio technical exercise
 
 9)added lambda functions to vpc to make it available for multiple AZ (highly available and redundant). I have also created a new lambda function to find match percentage of each applicant for the job, admin will submit the keywords they are looking for in a candidate for a particular job role, and this lambda will find the match percentage of candidate matching the keywords with the resume stored in dynamo db table. (02/09/2023)
 
-10) Integrated upload service with UI and handled CORS (to allow request from UI). (06/09/2023)
+10) Integrated upload service(apply for job) and get count(to display number of applicants) service with UI, and also handled CORS (to allow request from UI). Designed admin page to view all applicants. (06/09/2023)
 
 # To run the application, run both Backend(cdk) and UI
 # CX-STUDIO-EXERCISE/cx-cdk-exercise

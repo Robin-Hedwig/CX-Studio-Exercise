@@ -1,0 +1,71 @@
+.header-bar {
+    background-color: #f0f0f0;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .content {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+  }
+  
+  .keyword-section {
+    width: 30%;
+  }
+  
+  .keyword-input {
+    display: flex;
+    align-items: center;
+  }
+  
+  .keyword-input input {
+    padding: 10px;
+    margin-right: 10px;
+    width: 70%;
+  }
+  
+  .keyword-input button {
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+  }
+  
+  .keyword-list {
+    margin-top: 10px;
+  }
+  
+  .match-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    margin-top: 10px;
+  }
+  
+  .applicant-table {
+    width: 65%;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  th {
+    background-color: #f2f2f2;
+  }
+  
+  select {
+    width: 100%;
+    padding: 8px;
+  }
+  

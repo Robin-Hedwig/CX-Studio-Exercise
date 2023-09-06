@@ -68,3 +68,7 @@
 .success-message.show {
   opacity: 1; 
 }
+
+.applicant-count {
+  font-size: 50%; 
+}

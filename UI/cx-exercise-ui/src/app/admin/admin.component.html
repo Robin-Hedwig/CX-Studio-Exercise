@@ -1,0 +1,52 @@
+<div class="header-bar">
+    <h1 style="color: navy; font-weight: bold;">Applicant Tracking</h1>
+  </div>
+  
+  <div class="content">
+    <div class="keyword-section">
+      <div class="keyword-input">
+        <input [(ngModel)]="newKeyword" placeholder="Enter keyword" />
+        <button (click)="addKeyword()">Add</button>
+      </div>
+      <div class="keyword-list">
+        Keywords: {{ keywords }}
+      </div>
+      <button class="match-button" (click)="matchKeywords()">Match</button>
+    </div>
+  
+    <div class="applicant-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email ID</th>
+            <th>Phone number</th>
+            <th>Gender</th>
+            <th>Disability</th>
+            <th>Visa Status</th>
+            <th>Match Percentage</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let applicant of applicants">
+            <td>{{ applicant.name }}</td>
+            <td>{{ applicant.email }}</td>
+            <td>{{ applicant.phoneNumber }}</td>
+            <td>{{ applicant.gender }}</td>
+            <td>{{ applicant.disability }}</td>
+            <td>{{ applicant.visaStatus }}</td>
+            <td>{{ applicant.matchPercentage }}</td>
+            <td>
+              <select [(ngModel)]="applicant.status">
+                <option value="Shortlisted">Shortlisted</option>
+                <option value="Rejected">Rejected</option>
+                <option value="Finalized">Finalized</option>
+              </select>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  

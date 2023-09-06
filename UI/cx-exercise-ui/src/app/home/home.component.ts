@@ -10,9 +10,15 @@ import { HttpClient } from '@angular/common/http';
 export class HomeComponent {
 
   //update base url here(note: do not finish the url with "/")
-  private baseUrl = 'https://e97xugdrel.execute-api.eu-west-2.amazonaws.com/prod';
+  private baseUrl = 'https://cnd6v5pdyl.execute-api.eu-west-2.amazonaws.com/prod';
 
   constructor(private http: HttpClient) { }
+
+  applicantCount: string = '';
+
+  ngOnInit() {
+    this.getApplicantCount();
+  }
 
   showSuccessMessage = false;
 
@@ -58,6 +64,7 @@ export class HomeComponent {
             disabilitySelect.selectedIndex = 0;
             visaInput.value = '';
             resumeInput.value = '';
+            window.location.reload();
           }, 3000);
         } else {
           console.log('Upload successful (JSON response)', response);
@@ -65,6 +72,21 @@ export class HomeComponent {
       },
       error => {
         console.error('Upload failed', error);
+      }
+    );
+  }
+
+  getApplicantCount() {
+    const apiUrl = `${this.baseUrl}/get-count`;
+
+    this.http.get(apiUrl, { responseType: 'text' as 'json' }).subscribe(
+      response => {
+        if (typeof response === 'string') {
+          this.applicantCount = response;
+        }
+      },
+      error => {
+        console.error('Error fetching applicant count', error);
       }
     );
   }
