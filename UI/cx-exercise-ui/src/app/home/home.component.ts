@@ -9,10 +9,10 @@ import { HttpClient } from '@angular/common/http';
 })
 export class HomeComponent {
 
-  //update base url here
-  private baseUrl = 'https://fl12lc9jxk.execute-api.eu-west-2.amazonaws.com/prod/'; 
+  //update base url here(note: do not finish the url with "/")
+  private baseUrl = 'https://e97xugdrel.execute-api.eu-west-2.amazonaws.com/prod';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   showSuccessMessage = false;
 
@@ -27,27 +27,46 @@ export class HomeComponent {
       return;
     }
 
-    formData.append('email', (document.getElementById('email') as HTMLInputElement).value);
-    formData.append('name', (document.getElementById('name') as HTMLInputElement).value);
-    formData.append('phoneNumber', (document.getElementById('phone') as HTMLInputElement).value);
-    formData.append('gender', (document.getElementById('gender') as HTMLSelectElement).value);
-    formData.append('disability', (document.getElementById('disability') as HTMLSelectElement).value);
-    formData.append('visaStatus', (document.getElementById('visa') as HTMLInputElement).value);
+    const emailInput = document.getElementById('email') as HTMLInputElement;
+    const nameInput = document.getElementById('name') as HTMLInputElement;
+    const phoneInput = document.getElementById('phone') as HTMLInputElement;
+    const genderSelect = document.getElementById('gender') as HTMLSelectElement;
+    const disabilitySelect = document.getElementById('disability') as HTMLSelectElement;
+    const visaInput = document.getElementById('visa') as HTMLInputElement;
+
+    formData.append('email', emailInput.value);
+    formData.append('name', nameInput.value);
+    formData.append('phoneNumber', phoneInput.value);
+    formData.append('gender', genderSelect.value);
+    formData.append('disability', disabilitySelect.value);
+    formData.append('visaStatus', visaInput.value);
 
     const apiUrl = `${this.baseUrl}/upload`;
 
-    this.http.post(apiUrl, formData).subscribe(
+    this.http.post(apiUrl, formData, { responseType: 'text' as 'json' }).subscribe(
       response => {
-        console.log('Upload successful', response);
-        this.showSuccessMessage = true;
+        if (typeof response === 'string') {
+          console.log('Upload successful (text response)', response);
+          this.showSuccessMessage = true;
 
-        setTimeout(() => {
-          this.showSuccessMessage = false;
-        }, 3000);
+          setTimeout(() => {
+            this.showSuccessMessage = false;
+            emailInput.value = '';
+            nameInput.value = '';
+            phoneInput.value = '';
+            genderSelect.selectedIndex = 0;
+            disabilitySelect.selectedIndex = 0;
+            visaInput.value = '';
+            resumeInput.value = '';
+          }, 3000);
+        } else {
+          console.log('Upload successful (JSON response)', response);
+        }
       },
       error => {
         console.error('Upload failed', error);
       }
     );
   }
+
 }

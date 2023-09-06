@@ -7,6 +7,7 @@ import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as s3notifications from 'aws-cdk-lib/aws-s3-notifications';
 import * as iam from 'aws-cdk-lib/aws-iam';
+import * as apigatewayv2 from '@aws-cdk/aws-apigatewayv2';
 
 
 export class CxCdkExerciseStack extends cdk.Stack {
@@ -63,6 +64,13 @@ export class CxCdkExerciseStack extends cdk.Stack {
       binaryMediaTypes: ['multipart/form-data'],
     });
 
+    //added cors to allow incoming requests from other ports(from UI)
+    const corsOptions: apigateway.CorsOptions = {
+      allowOrigins: ['http://localhost:4200'],
+      allowMethods: ['OPTIONS', 'POST'],
+    };
+
+    api.root.addCorsPreflight(corsOptions);
 
     //Created a resource and method for the API Gateway to upload resume and other user data
     const upload = api.root.addResource('upload');
@@ -156,22 +164,22 @@ export class CxCdkExerciseStack extends cdk.Stack {
     const updateStatusMethod = updateStatus.addMethod('POST', new apigateway.LambdaIntegration(updateStatusHandler));
 
     //resourse to find resume match percentage when admin sends keywords to match with resume
-    const matchPercentageHandler =new lambda.Function(this,'matchPercentageHandler',{
-      runtime:lambda.Runtime.NODEJS_14_X,
-      code:lambda.Code.fromAsset('lambda'),
-      handler:'match-percentage.handler',
-      environment:{
-        TABLE_NAME:table.tableName,
+    const matchPercentageHandler = new lambda.Function(this, 'matchPercentageHandler', {
+      runtime: lambda.Runtime.NODEJS_14_X,
+      code: lambda.Code.fromAsset('lambda'),
+      handler: 'match-percentage.handler',
+      environment: {
+        TABLE_NAME: table.tableName,
       },
-      vpc:vpc,
+      vpc: vpc,
     });
 
     //granting write permissiton to update match percentage to the table
     table.grantReadWriteData(matchPercentageHandler);
 
     //created an api gateway resourse to access the lambda
-    const matchPercent=api.root.addResource('match-percentage');
-    const matchPercentMethod=matchPercent.addMethod('POST', new apigateway.LambdaIntegration(matchPercentageHandler));
+    const matchPercent = api.root.addResource('match-percentage');
+    const matchPercentMethod = matchPercent.addMethod('POST', new apigateway.LambdaIntegration(matchPercentageHandler));
 
   }
 }
