@@ -8,8 +8,8 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AdminComponent implements OnInit {
 
-  //update base url here(note: do not finish the url with "/")
-  private baseUrl = 'https://fih439y1u7.execute-api.eu-west-2.amazonaws.com/prod';
+  // Update base URL here (note: do not finish the URL with "/")
+  private baseUrl = 'https://pxy1qyo7zl.execute-api.eu-west-2.amazonaws.com/prod';
 
   newKeyword = '';
   keywords = '';
@@ -20,7 +20,6 @@ export class AdminComponent implements OnInit {
   ngOnInit() {
     this.getApplicants();
     this.keywords = localStorage.getItem('keywords') || '';
-
   }
 
   addKeyword() {
@@ -49,6 +48,7 @@ export class AdminComponent implements OnInit {
       }
     );
   }
+
   clearKeywords() {
     this.keywords = '';
     localStorage.removeItem('keywords');
@@ -72,6 +72,34 @@ export class AdminComponent implements OnInit {
     } else {
       return 'N/A'; 
     }
-  }
+  }statusUpdatedMessageVisible = false;
 
+
+  updateStatus(email: string, status: string) {
+    const requestData = {
+      email: email,
+      status: status
+    };
+  
+    this.http.post(`${this.baseUrl}/update-status`, requestData).subscribe(
+      (response: any) => {
+        console.log('Status updated:', response);
+  
+        const updatedApplicant = this.applicants.find(applicant => applicant.email === email);
+        if (updatedApplicant) {
+          updatedApplicant.status = status;
+        }
+  
+        this.statusUpdatedMessageVisible = true;
+  
+        setTimeout(() => {
+          this.statusUpdatedMessageVisible = false;
+        }, 2000);
+      },
+      error => {
+        console.error('Error updating status', error);
+      }
+    );
+  }
+  
 }

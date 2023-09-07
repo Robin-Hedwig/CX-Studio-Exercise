@@ -25,7 +25,7 @@ CX Studio technical exercise
 
 10) Integrated upload service(apply for job) and get count(to display number of applicants) service with UI, and also handled CORS (to allow request from UI). Designed admin page to view all applicants. (06/09/2023)
 
-11)Integrated Match Percentage service with UI and managed keywords functionality in the UI.(7/09/2023)
+11)Integrated Match Percentage service with UI and managed keywords functionality in the UI. Integrated update status functionality with the UI.(7/09/2023)
 
 # To run the application, run both Backend(cdk) and UI
 # CX-STUDIO-EXERCISE/cx-cdk-exercise

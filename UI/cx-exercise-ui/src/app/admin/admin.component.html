@@ -41,14 +41,19 @@
                         {{ parseAndFormatMatchPercentage(applicant.matchPercentage) }}
                     </td>
                     <td>
-                        <select [(ngModel)]="applicant.status">
+                        <select [(ngModel)]="applicant.status"
+                            (change)="updateStatus(applicant.email, applicant.status)">
                             <option value="Shortlisted">Shortlisted</option>
                             <option value="Rejected">Rejected</option>
                             <option value="Finalized">Finalized</option>
                         </select>
                     </td>
+
                 </tr>
             </tbody>
         </table>
+        <div class="status-updated-message" *ngIf="statusUpdatedMessageVisible">
+            Status Updated
+        </div>
     </div>
 </div>
