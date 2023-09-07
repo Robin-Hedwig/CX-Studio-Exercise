@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 export class HomeComponent {
 
   //update base url here(note: do not finish the url with "/")
-  private baseUrl = 'https://cnd6v5pdyl.execute-api.eu-west-2.amazonaws.com/prod';
+  private baseUrl = 'https://fih439y1u7.execute-api.eu-west-2.amazonaws.com/prod';
 
   constructor(private http: HttpClient) { }
 

@@ -7,7 +7,9 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./admin.component.css']
 })
 export class AdminComponent implements OnInit {
-  private baseUrl = 'https://jhnhex7cxc.execute-api.eu-west-2.amazonaws.com/prod';
+
+  //update base url here(note: do not finish the url with "/")
+  private baseUrl = 'https://fih439y1u7.execute-api.eu-west-2.amazonaws.com/prod';
 
   newKeyword = '';
   keywords = '';
@@ -17,6 +19,8 @@ export class AdminComponent implements OnInit {
 
   ngOnInit() {
     this.getApplicants();
+    this.keywords = localStorage.getItem('keywords') || '';
+
   }
 
   addKeyword() {
@@ -27,11 +31,27 @@ export class AdminComponent implements OnInit {
         this.keywords = this.newKeyword;
       }
       this.newKeyword = '';
+      localStorage.setItem('keywords', this.keywords);
     }
   }
 
   matchKeywords() {
-    // Perform keyword matching here
+    const requestData = {
+      keywords: this.keywords
+    };
+
+    this.http.post(`${this.baseUrl}/match-percentage`, requestData).subscribe(
+      () => {
+        window.location.reload();
+      },
+      error => {
+        console.error('Error matching keywords', error);
+      }
+    );
+  }
+  clearKeywords() {
+    this.keywords = '';
+    localStorage.removeItem('keywords');
   }
 
   getApplicants() {
@@ -44,5 +64,14 @@ export class AdminComponent implements OnInit {
       }
     );
   }
-  
+
+  parseAndFormatMatchPercentage(value: string): string {
+    const parsedValue = parseFloat(value);
+    if (!isNaN(parsedValue)) {
+      return parsedValue.toFixed(2);
+    } else {
+      return 'N/A'; 
+    }
+  }
+
 }
